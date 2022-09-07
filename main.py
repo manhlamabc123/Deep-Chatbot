@@ -50,3 +50,11 @@ with open(datafile, 'w', encoding='utf-8') as output_file:
     writer = csv.writer(output_file, delimiter=delimiter, lineterminator='\n')
     for pair in extract_sentence_pairs(conversations):
         writer.writerow(pair)
+
+# Load/Assemble Voc and pairs
+save_dir = os.path.join('data', 'save')
+voc, pairs = load_prepare_data(corpus, corpus_name, datafile, save_dir)
+# Print same pairs to validate
+print('\npairs:')
+for pair in pairs[:10]:
+    print(pair)
