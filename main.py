@@ -57,3 +57,14 @@ voc, pairs = load_prepare_data(corpus, corpus_name, datafile, save_dir)
 
 # Trim Voc and pairs
 pairs = trim_rare_words(voc, pairs)
+
+# Prepare data for models
+small_batch_size = 5
+batches = batch_to_train_data(voc, [random.choice(pairs) for _ in range(small_batch_size)])
+input_variable, lengths, target_variable, mask, max_target_len = batches
+
+print('input_variable: ', input_variable)
+print('lengths: ', lengths)
+print('target_variable: ', target_variable)
+print('mask: ', mask)
+print('max_target_len: ', max_target_len)

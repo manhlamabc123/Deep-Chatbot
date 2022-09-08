@@ -1,7 +1,9 @@
+import itertools
 import json
 import unicodedata
 import re
 from voc import *
+import torch
 
 def print_lines(file, n=10):
     with open(file, 'rb') as datafile:
@@ -126,3 +128,49 @@ def trim_rare_words(voc, pairs, MIN_COUNT=MIN_COUNT):
 
     print(f"Trimmed from {len(pairs)} pairs to {len(keep_pairs)}, {len(keep_pairs) / len(pairs):.4f}")
     return keep_pairs
+
+# Convert our English sentences to tensors by converting words to their indexes
+def indexes_from_sentence(voc, sentence):
+    return [voc.word_to_index[word] for word in sentence.split(' ')] + [EOS_token]
+
+def zero_padding(line, fillvalue=PAD_token):
+    return list(itertools.zip_longest(*line, fillvalue=fillvalue))
+
+def binary_matrix(line, value=PAD_token):
+    m = []
+    for i, sequence in enumerate(line):
+        m.append([])
+        for token in sequence:
+            if token == PAD_token:
+                m[i].append(0)
+            else:
+                m[i].append(1)
+    return m
+
+# Returns padded input sequence tensor and lengths
+def input_var(line, voc):
+    indexes_batch = [indexes_from_sentence(voc, sentence) for sentence in line]
+    lengths = torch.tensor([len(indexes) for indexes in indexes_batch])
+    pad_list = zero_padding(indexes_batch)
+    pad_var = torch.LongTensor(pad_list)
+    return pad_var, lengths
+
+# Returns padded target sequence tensor, padding mask, and max target length
+def output_var(line, voc):
+    indexes_batch = [indexes_from_sentence(voc, sentence) for sentence in line]
+    max_target_len = max(len(indexes) for indexes in indexes_batch)
+    pad_list = zero_padding(indexes_batch)
+    mask = binary_matrix(pad_list)
+    mask = torch.BoolTensor(mask)
+    pad_var = torch.LongTensor(pad_list)
+    return pad_var, mask, max_target_len
+
+def batch_to_train_data(voc, pair_batch):
+    pair_batch.sort(key=lambda x: len(x[0].split(' ')), reverse=True)
+    input_batch, output_batch = [], []
+    for pair in pair_batch:
+        input_batch.append(pair[0])
+        output_batch.append(pair[1])
+    inp, lengths = input_var(input_batch, voc)
+    output, mask, max_target_len = output_var(output_batch, voc)
+    return inp, lengths, output, mask, max_target_len
