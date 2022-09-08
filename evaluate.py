@@ -1,4 +1,9 @@
-from main import *
+import torch
+from data import *
+
+MAX_LENGTH = 10
+USE_CUDA = torch.cuda.is_available()
+device = torch.device("cuda" if USE_CUDA else "cpu")
 
 def evaluate(encoder, decoder, searcher, voc, sentence, max_length=MAX_LENGTH):
     ### Format input sentence as a batch

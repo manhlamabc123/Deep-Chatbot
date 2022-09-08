@@ -86,7 +86,7 @@ def train(input_variable, lengths, target_variable, mask, max_target_len, encode
 
     return sum(print_losses) / n_totals
 
-def trainIters(model_name, voc, pairs, encoder, decoder, encoder_optimizer, decoder_optimizer, embedding, encoder_n_layers, decoder_n_layers, save_dir, n_iteration, batch_size, print_every, save_every, clip, corpus_name, loadFilename, teacher_forcing_ratio):
+def trainIters(model_name, voc, pairs, encoder, decoder, encoder_optimizer, decoder_optimizer, embedding, encoder_n_layers, decoder_n_layers, save_dir, n_iteration, batch_size, print_every, save_every, clip, corpus_name, loadFilename, teacher_forcing_ratio, hidden_size):
 
     # Load batches for each iteration
     training_batches = [batch_to_train_data(voc, [random.choice(pairs) for _ in range(batch_size)])
