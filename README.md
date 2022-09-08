@@ -46,4 +46,4 @@ python main.py
 ## Acknowledgments
 
 * Tutorial: [web](https://pytorch.org/tutorials/beginner/chatbot_tutorial.html)
-* Reletad Paper: inside `.\paper`
+* Related Paper: inside `.\paper`
