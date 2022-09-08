@@ -20,6 +20,7 @@ import math
 import json
 from data import *
 from model import *
+from train import *
 
 
 USE_CUDA = torch.cuda.is_available()
