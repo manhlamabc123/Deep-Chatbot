@@ -148,10 +148,10 @@ for state in decoder_optimizer.state.values():
             state[k] = v.cuda()
 
 # Run training iterations
-# print("Starting Training!")
-# trainIters(model_name, voc, pairs, encoder, decoder, encoder_optimizer, decoder_optimizer,
-#            embedding, encoder_n_layers, decoder_n_layers, save_dir, n_iteration, batch_size,
-#            print_every, save_every, clip, corpus_name, loadFilename, teacher_forcing_ratio, hidden_size)
+print("Starting Training!")
+trainIters(model_name, voc, pairs, encoder, decoder, encoder_optimizer, decoder_optimizer,
+           embedding, encoder_n_layers, decoder_n_layers, save_dir, n_iteration, batch_size,
+           print_every, save_every, clip, corpus_name, loadFilename, teacher_forcing_ratio, hidden_size)
 
 # Set dropout layers to eval mode
 encoder.eval()
