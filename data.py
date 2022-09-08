@@ -50,6 +50,7 @@ def extract_sentence_pairs(conversations):
 
 # Preprocessing
 MAX_LENGTH = 10 # Maximum sentence length to consider
+MIN_COUNT = 3 # Minimum word count threshold for trimming
 
 # Turn a Unicode string to plain ASCII
 def unicode_to_ascii(string):
@@ -97,3 +98,31 @@ def load_prepare_data(corpus, corpus_name, datafile, save_dir):
         voc.add_sentence(pair[1])
     print('Counted words:', voc.num_words)
     return voc, pairs
+
+def trim_rare_words(voc, pairs, MIN_COUNT=MIN_COUNT):
+    # Trim words used under the MIN_COUNT from the voc
+    voc.trim(MIN_COUNT)
+    # Filter out pairs with trimmed words
+    keep_pairs = []
+    for pair in pairs:
+        input_sentence = pair[0]
+        output_sentence = pair[1]
+        keep_input = True
+        keep_output = True
+        # Check input sentence
+        for word in input_sentence.split(' '):
+            if word not in voc.word_to_index:
+                keep_input = False
+                break
+        # Check output sentence
+        for word in output_sentence.split(' '):
+            if word not in voc.word_to_index:
+                keep_output = False
+                break
+    
+        # Only keep pairs that do not contain trimmed word(s) in their input or output sentence
+        if keep_input and keep_output:
+            keep_pairs.append(pair)
+
+    print(f"Trimmed from {len(pairs)} pairs to {len(keep_pairs)}, {len(keep_pairs) / len(pairs):.4f}")
+    return keep_pairs

@@ -39,7 +39,7 @@ class Voc:
             if v >= min_count:
                 keep_words.append(k)
 
-        print(f"keep_words {len(keep_words)} / {len(self.word_to_index)} = {len(self.word_to_index):4.f}")
+        print(f"keep_words {len(keep_words)} / {len(self.word_to_index)} = {len(keep_words) / len(self.word_to_index):.4f}")
 
         # Reinitialize dictionaries
         self.word_to_index = {}

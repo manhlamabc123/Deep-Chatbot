@@ -54,7 +54,6 @@ with open(datafile, 'w', encoding='utf-8') as output_file:
 # Load/Assemble Voc and pairs
 save_dir = os.path.join('data', 'save')
 voc, pairs = load_prepare_data(corpus, corpus_name, datafile, save_dir)
-# Print same pairs to validate
-print('\npairs:')
-for pair in pairs[:10]:
-    print(pair)
+
+# Trim Voc and pairs
+pairs = trim_rare_words(voc, pairs)
